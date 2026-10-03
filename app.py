@@ -12,23 +12,31 @@ if not os.path.exists(ARQUIVO_DADOS):
 
 st.set_page_config(page_title="Controle de Descartes - Premo", layout="wide", page_icon="🏗️")
 
-# --- LOGO VETORIAL DA PREMO EM HTML/SVG ---
-col_logo, col_titulo = st.columns([1, 3])
+# --- LOGO OFICIAL PREMO (VETORIZADA EM SVG) ---
+col_logo, col_titulo = st.columns([1.2, 2.8])
 
 with col_logo:
     st.markdown("""
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 90" width="100%">
-            <rect width="300" height="90" rx="10" fill="#FFC107" />
-            <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#1E1E1E" letter-spacing="2">PREMO</text>
-            <text x="50%" y="80%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#333333" letter-spacing="3">SOLUÇÕES CONSTRUTIVAS</text>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 140" width="100%">
+            <!-- Símbolo Hexagonal Geométrico -->
+            <g fill="none" stroke="#1E1E1E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 60 15 L 125 50 L 125 120 L 60 155 L -5 120 L -5 50 Z" transform="translate(20, -5) scale(0.7)"/>
+                <path d="M 60 15 L 60 85 L 125 120" transform="translate(20, -5) scale(0.7)"/>
+                <path d="M 60 50 L 100 70 L 100 100 L 60 120 L 20 100 L 20 70 Z" transform="translate(20, -5) scale(0.7)"/>
+                <path d="M 20 70 L 60 90 L 100 70" transform="translate(20, -5) scale(0.7)"/>
+            </g>
+            <!-- Texto PREMO -->
+            <text x="135" y="75" font-family="'Arial Black', Gadget, sans-serif" font-weight="900" font-size="52" fill="#1E1E1E" letter-spacing="-1">PREMO</text>
+            <!-- Texto SOLUÇÕES CONSTRUTIVAS -->
+            <text x="138" y="102" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="14" fill="#333333" letter-spacing="2">SOLUÇÕES CONSTRUTIVAS</text>
         </svg>
     """, unsafe_allow_html=True)
 
 with col_titulo:
     st.markdown("""
-        <div style="padding-top: 10px;">
-            <h1 style="color:#1E1E1E;margin:0;font-size:28px;font-weight:bold;">PREMO SOLUÇÕES CONSTRUTIVAS</h1>
-            <p style="color:#666666;margin:0;font-size:15px;">Sistema Interno de Registro e Gestão de Descarte</p>
+        <div style="padding-top: 15px;">
+            <h2 style="color:#1E1E1E;margin:0;font-size:26px;font-weight:bold;">Sistema de Gestão de Descarte</h2>
+            <p style="color:#666666;margin:2px 0 0 0;font-size:15px;">Controle Interno e Indicadores de Perdas em Tempo Real</p>
         </div>
     """, unsafe_allow_html=True)
 
