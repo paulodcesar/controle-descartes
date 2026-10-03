@@ -12,11 +12,11 @@ if not os.path.exists(ARQUIVO_DADOS):
 
 st.set_page_config(page_title="Controle de Descartes - Premo", layout="wide", page_icon="🏗️")
 
-# --- CABEÇALHO PERSONALIZADO PREMO ---
+# --- BANNER SUPERIOR COM AS CORES AMARELO E PRETO DA PREMO ---
 st.markdown("""
-    <div style="background-color:#1E3A8A;padding:15px;border-radius:10px;margin-bottom:20px;">
-        <h1 style="color:white;margin:0;font-size:28px;">🏗️ PREMO SOLUÇÕES CONSTRUTIVAS</h1>
-        <p style="color:#E0E7FF;margin:5px 0 0 0;font-size:14px;">Sistema Interno de Registro e Gestão de Descarte de Produtos</p>
+    <div style="background-color:#1E1E1E;padding:20px;border-radius:10px;border-left:8px solid #FFC107;margin-bottom:25px;">
+        <h1 style="color:#FFC107;margin:0;font-size:32px;font-weight:bold;letter-spacing:1px;">🏗️ PREMO SOLUÇÕES CONSTRUTIVAS</h1>
+        <p style="color:#FFFFFF;margin:5px 0 0 0;font-size:16px;">Sistema Interno de Registro e Gestão de Descarte de Produtos</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -97,7 +97,7 @@ elif aba == "Visualizar Gráficos e Dados":
                 y="Quantidade", 
                 title="Total de Peças por Produto",
                 text_auto=True,
-                color="Produto"
+                color_discrete_sequence=['#FFC107']
             )
             st.plotly_chart(fig_prod, use_container_width=True)
             
@@ -108,7 +108,8 @@ elif aba == "Visualizar Gráficos e Dados":
                 names="Motivo", 
                 values="Quantidade", 
                 title="Distribuição por Motivo",
-                hole=0.4
+                hole=0.4,
+                color_discrete_sequence=px.colors.sequential.YlOrRd
             )
             st.plotly_chart(fig_motivo, use_container_width=True)
             
