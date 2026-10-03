@@ -12,12 +12,17 @@ if not os.path.exists(ARQUIVO_DADOS):
 
 st.set_page_config(page_title="Controle de Descartes - Premo", layout="wide", page_icon="🏗️")
 
-# --- CABEÇALHO COM A IMAGEM DA LOGO ---
+# --- LOGO VETORIAL DA PREMO EM HTML/SVG ---
 col_logo, col_titulo = st.columns([1, 3])
 
 with col_logo:
-    # Exibe a imagem direta do site oficial
-    st.image("https://premosolucoes.com.br/wp-content/uploads/2021/04/logo-premo.png", width=200)
+    st.markdown("""
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 90" width="100%">
+            <rect width="300" height="90" rx="10" fill="#FFC107" />
+            <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#1E1E1E" letter-spacing="2">PREMO</text>
+            <text x="50%" y="80%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#333333" letter-spacing="3">SOLUÇÕES CONSTRUTIVAS</text>
+        </svg>
+    """, unsafe_allow_html=True)
 
 with col_titulo:
     st.markdown("""
