@@ -1,0 +1,94 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import os
+from datetime import datetime
+
+ARQUIVO_DADOS = "descartes.csv"
+
+if not os.path.exists(ARQUIVO_DADOS):
+    df_inicial = pd.DataFrame(columns=["Data", "Produto", "Quantidade", "Motivo", "Observacao"])
+    df_inicial.to_csv(ARQUIVO_DADOS, index=False)
+
+st.set_page_config(page_title="Controle de Descartes - Cimento", layout="wide")
+st.title("🏭 Registro e Análise de Descarte")
+
+aba = st.sidebar.radio("Navegação", ["Registrar Descarte", "Visualizar Gráficos e Dados"])
+
+if aba == "Registrar Descarte":
+    st.subheader("📋 Novo Registro de Descarte")
+    
+    with st.form("form_descarte", clear_on_submit=True):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            data = st.date_input("Data do Ocorrido", datetime.now())
+            produto = st.selectbox(
+                "Produto Descartado",
+                ["Bloco de Concreto", "Tubo de Concreto", "Paver / Intertravado", "Laje Pré-moldada", "Viga", "Outro"]
+            )
+            quantidade = st.number_input("Quantidade (unidades)", min_value=1, step=1)
+            
+        with col2:
+            motivo = st.selectbox(
+                "Motivo do Descarte",
+                ["Trinca / Quebra", "Cura Inadequada", "Falha de Moldagem", "Fora de Especificação", "Dano no Transporte", "Outro"]
+            )
+            observacao = st.text_area("Observações Adicionais (opcional)")
+            
+        submitted = st.form_submit_button("Salvar Registro")
+        
+        if submitted:
+            novo_registro = pd.DataFrame([{
+                "Data": data.strftime("%Y-%m-%d"),
+                "Produto": produto,
+                "Quantidade": quantidade,
+                "Motivo": motivo,
+                "Observacao": observacao
+            }])
+            
+            novo_registro.to_csv(ARQUIVO_DADOS, mode='a', header=False, index=False)
+            st.success("✅ Descarte registrado com sucesso!")
+
+elif aba == "Visualizar Gráficos e Dados":
+    st.subheader("📊 Indicadores e Perdas")
+    
+    df = pd.read_csv(ARQUIVO_DADOS)
+    
+    if df.empty:
+        st.info("Nenhum dado registrado até o momento.")
+    else:
+        col_m1, col_m2 = st.columns(2)
+        col_m1.metric("Total de Ocorrências", len(df))
+        col_m2.metric("Total de Peças Descartadas", int(df["Quantidade"].sum()))
+        
+        st.divider()
+        
+        g1, g2 = st.columns(2)
+        
+        with g1:
+            df_prod = df.groupby("Produto")["Quantidade"].sum().reset_index()
+            fig_prod = px.bar(
+                df_prod, 
+                x="Produto", 
+                y="Quantidade", 
+                title="Total por Produto",
+                text_auto=True,
+                color="Produto"
+            )
+            st.plotly_chart(fig_prod, use_container_width=True)
+            
+        with g2:
+            df_motivo = df.groupby("Motivo")["Quantidade"].sum().reset_index()
+            fig_motivo = px.pie(
+                df_motivo, 
+                names="Motivo", 
+                values="Quantidade", 
+                title="Distribuição por Motivo",
+                hole=0.4
+            )
+            st.plotly_chart(fig_motivo, use_container_width=True)
+            
+        st.divider()
+        st.subheader("📄 Histórico Completo")
+        st.dataframe(df, use_container_width=True)
