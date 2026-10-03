@@ -12,18 +12,22 @@ if not os.path.exists(ARQUIVO_DADOS):
 
 st.set_page_config(page_title="Controle de Descartes - Premo", layout="wide", page_icon="🏗️")
 
-# --- CABEÇALHO PERSONALIZADO PREMO ---
-st.markdown("""
-    <div style="background-color:#1E1E1E;padding:20px;border-radius:12px;border-left:10px solid #FFC107;display:flex;align-items:center;gap:20px;margin-bottom:25px;">
-        <div style="background-color:#FFC107;color:#1E1E1E;font-weight:900;font-size:26px;padding:12px 18px;border-radius:8px;letter-spacing:1px;font-family:sans-serif;">
-            PREMO
+# --- CABEÇALHO COM A IMAGEM DA LOGO ---
+col_logo, col_titulo = st.columns([1, 3])
+
+with col_logo:
+    # Exibe a imagem direta do site oficial
+    st.image("https://premosolucoes.com.br/wp-content/uploads/2021/04/logo-premo.png", width=200)
+
+with col_titulo:
+    st.markdown("""
+        <div style="padding-top: 10px;">
+            <h1 style="color:#1E1E1E;margin:0;font-size:28px;font-weight:bold;">PREMO SOLUÇÕES CONSTRUTIVAS</h1>
+            <p style="color:#666666;margin:0;font-size:15px;">Sistema Interno de Registro e Gestão de Descarte</p>
         </div>
-        <div>
-            <h1 style="color:#FFC107;margin:0;font-size:28px;font-weight:bold;letter-spacing:1px;font-family:sans-serif;">PREMO SOLUÇÕES CONSTRUTIVAS</h1>
-            <p style="color:#E0E0E0;margin:4px 0 0 0;font-size:15px;">Sistema Interno de Registro e Gestão de Descarte</p>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
+st.divider()
 
 # --- ABA DE NAVEGAÇÃO ---
 aba = st.sidebar.radio("Navegação", ["Registrar Descarte", "Visualizar Gráficos e Dados"])
