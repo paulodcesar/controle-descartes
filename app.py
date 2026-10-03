@@ -12,18 +12,13 @@ if not os.path.exists(ARQUIVO_DADOS):
 
 st.set_page_config(page_title="Controle de Descartes - Premo", layout="wide", page_icon="🏗️")
 
-# --- CABEÇALHO COM A MARCA DA EMPRESA ---
-col_logo, col_titulo = st.columns([1, 4])
-
-with col_logo:
-    # Logo oficial carregada diretamente do site da Premo
-    st.image("https://premosolucoes.com.br/wp-content/uploads/2021/04/logo-premo.png", width=180)
-
-with col_titulo:
-    st.title("Premo Soluções Construtivas")
-    st.caption("Sistema Interno de Controle e Análise de Descarte de Produtos")
-
-st.divider()
+# --- CABEÇALHO PERSONALIZADO PREMO ---
+st.markdown("""
+    <div style="background-color:#1E3A8A;padding:15px;border-radius:10px;margin-bottom:20px;">
+        <h1 style="color:white;margin:0;font-size:28px;">🏗️ PREMO SOLUÇÕES CONSTRUTIVAS</h1>
+        <p style="color:#E0E7FF;margin:5px 0 0 0;font-size:14px;">Sistema Interno de Registro e Gestão de Descarte de Produtos</p>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- ABA DE NAVEGAÇÃO ---
 aba = st.sidebar.radio("Navegação", ["Registrar Descarte", "Visualizar Gráficos e Dados"])
