@@ -12,11 +12,54 @@ if not os.path.exists(ARQUIVO_DADOS):
 
 st.set_page_config(page_title="Controle de Descartes - Premo", layout="wide", page_icon="🏗️")
 
-# --- BANNER DO CABEÇALHO COM FUNDO AMARELO PREMO ---
+# --- CABEÇALHO RESPONSIVO COM FUNDO AMARELO PREMO ---
 st.markdown("""
-    <div style="background-color:#FFC107;padding:18px 25px;border-radius:12px;display:flex;align-items:center;gap:20px;margin-bottom:25px;box-shadow:0px 4px 10px rgba(0,0,0,0.1);">
-        <div style="flex-shrink:0;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 0 400 130" width="220" height="75">
+    <style>
+        .premo-header {
+            background-color: #FFC107;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+        .premo-logo-container {
+            flex: 0 0 auto;
+            max-width: 200px;
+            width: 100%;
+        }
+        .premo-title-container {
+            flex: 1 1 250px;
+            border-left: 2px solid #1E1E1E;
+            padding-left: 15px;
+        }
+        /* Ajuste automático para telemóveis / ecras pequenos */
+        @media (max-width: 768px) {
+            .premo-header {
+                justify-content: center;
+                text-align: center;
+            }
+            .premo-logo-container {
+                max-width: 180px;
+                margin: 0 auto;
+            }
+            .premo-title-container {
+                border-left: none;
+                border-top: 2px solid #1E1E1E;
+                padding-left: 0;
+                padding-top: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="premo-header">
+        <div class="premo-logo-container">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 0 400 130" width="100%">
                 <!-- Símbolo Hexagonal Geométrico -->
                 <g fill="none" stroke="#1E1E1E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M 60 15 L 125 50 L 125 120 L 60 155 L -5 120 L -5 50 Z" transform="translate(10, 5) scale(0.55)"/>
@@ -30,9 +73,9 @@ st.markdown("""
                 <text x="107" y="75" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="10" fill="#1E1E1E" letter-spacing="1.5">SOLUÇÕES CONSTRUTIVAS</text>
             </svg>
         </div>
-        <div style="border-left: 2px solid #1E1E1E; padding-left: 20px;">
-            <h2 style="color:#1E1E1E;margin:0;font-size:22px;font-weight:bold;font-family:sans-serif;">Sistema de Gestão de Descarte</h2>
-            <p style="color:#333333;margin:2px 0 0 0;font-size:14px;font-weight:600;font-family:sans-serif;">Controle Interno e Indicadores de Perdas em Tempo Real</p>
+        <div class="premo-title-container">
+            <h2 style="color:#1E1E1E;margin:0;font-size:20px;font-weight:bold;font-family:sans-serif;">Sistema de Gestão de Descarte</h2>
+            <p style="color:#333333;margin:2px 0 0 0;font-size:13px;font-weight:600;font-family:sans-serif;">Controle Interno e Indicadores de Perdas</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
