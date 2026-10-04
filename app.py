@@ -1,4 +1,4 @@
-import streamlit as st
+iimport streamlit as st
 import pandas as pd
 import plotly.express as px
 import os
@@ -34,9 +34,9 @@ def salvar_registro(data, produto, quantidade, motivo, observacoes):
     df_atualizado = pd.concat([df_existente, novo_dado], ignore_index=True)
     df_atualizado.to_csv(NOME_ARQUIVO, index=False)
 
-# Exibição da Logo Oficial no Topo
+# Exibição da Logo Oficial no Topo (Com largura fixa para não esticar)
 if os.path.exists("logo.png"):
-    st.image("logo.png", use_container_width=True)
+    st.image("logo.png", width=280)
 else:
     st.title("🏗️ PREMO - Soluções Construtivas")
 
@@ -137,3 +137,4 @@ elif opcao_menu == "Visualizar Gráficos e Dados":
         # Tabela completa de registros
         st.subheader("📄 Histórico Completo")
         st.dataframe(df, use_container_width=True)
+        
