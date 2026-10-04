@@ -34,6 +34,24 @@ def salvar_registro(data, produto, quantidade, motivo, observacoes):
     df_atualizado = pd.concat([df_existente, novo_dado], ignore_index=True)
     df_atualizado.to_csv(NOME_ARQUIVO, index=False)
 
+# CSS para esticar e centralizar a logo no topo da tela
+st.markdown(
+    """
+    <style>
+    [data-testid="stImage"] {
+        display: flex;
+        justify-content: center;
+    }
+    [data-testid="stImage"] > img {
+        width: 100% !important;
+        max-width: 500px !important;
+        object-fit: contain;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Exibição da Logo Oficial no Topo
 if os.path.exists("logo.png"):
     st.image("logo.png", use_container_width=True)
