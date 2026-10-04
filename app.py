@@ -2,177 +2,138 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os
-from datetime import datetime
+from datetime import date
 
-ARQUIVO_DADOS = "descartes.csv"
+# Configuração inicial da página
+st.set_page_config(
+    page_title="Gestão de Descarte - PREMO",
+    page_icon="🏗️",
+    layout="centered"
+)
 
-if not os.path.exists(ARQUIVO_DADOS):
-    df_inicial = pd.DataFrame(columns=["Data", "Produto", "Quantidade", "Motivo", "Observacao"])
-    df_inicial.to_csv(ARQUIVO_DADOS, index=False)
+# Nome do arquivo CSV onde os dados são salvos
+NOME_ARQUIVO = "descartes.csv"
 
-st.set_page_config(page_title="Controle de Descartes - Premo", layout="wide", page_icon="🏗️")
+# Função para carregar os dados
+def carregar_dados():
+    if os.path.exists(NOME_ARQUIVO):
+        return pd.read_csv(NOME_ARQUIVO)
+    else:
+        return pd.DataFrame(columns=["Data", "Produto", "Quantidade", "Motivo", "Observacoes"])
 
-# --- CABEÇALHO RESPONSIVO COM FUNDO AMARELO PREMO ---
-st.markdown("""
-    <style>
-        .premo-header {
-            background-color: #FFC107;
-            padding: 15px 20px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-        }
-        .premo-logo-container {
-            flex: 0 0 auto;
-            max-width: 200px;
-            width: 100%;
-        }
-        .premo-title-container {
-            flex: 1 1 250px;
-            border-left: 2px solid #1E1E1E;
-            padding-left: 15px;
-        }
-        /* Ajuste automático para telemóveis / ecras pequenos */
-        @media (max-width: 768px) {
-            .premo-header {
-                justify-content: center;
-                text-align: center;
-            }
-            .premo-logo-container {
-                max-width: 180px;
-                margin: 0 auto;
-            }
-            .premo-title-container {
-                border-left: none;
-                border-top: 2px solid #1E1E1E;
-                padding-left: 0;
-                padding-top: 10px;
-                width: 100%;
-            }
-        }
-    </style>
+# Função para salvar novo registro
+def salvar_registro(data, produto, quantidade, motivo, observacoes):
+    df_existente = carregar_dados()
+    novo_dado = pd.DataFrame([{
+        "Data": data,
+        "Produto": produto,
+        "Quantidade": quantidade,
+        "Motivo": motivo,
+        "Observacoes": observacoes
+    }])
+    df_atualizado = pd.concat([df_existente, novo_dado], ignore_index=True)
+    df_atualizado.to_csv(NOME_ARQUIVO, index=False)
 
-    <div class="premo-header">
-        <div class="premo-logo-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 0 400 130" width="100%">
-                <!-- Símbolo Hexagonal Geométrico -->
-                <g fill="none" stroke="#1E1E1E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M 60 15 L 125 50 L 125 120 L 60 155 L -5 120 L -5 50 Z" transform="translate(10, 5) scale(0.55)"/>
-                    <path d="M 60 15 L 60 85 L 125 120" transform="translate(10, 5) scale(0.55)"/>
-                    <path d="M 60 50 L 100 70 L 100 100 L 60 120 L 20 100 L 20 70 Z" transform="translate(10, 5) scale(0.55)"/>
-                    <path d="M 20 70 L 60 90 L 100 70" transform="translate(10, 5) scale(0.55)"/>
-                </g>
-                <!-- Texto PREMO -->
-                <text x="105" y="55" font-family="'Arial Black', Gadget, sans-serif" font-weight="900" font-size="36" fill="#1E1E1E" letter-spacing="-1">PREMO</text>
-                <!-- Texto SOLUÇÕES CONSTRUTIVAS -->
-                <text x="107" y="75" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="10" fill="#1E1E1E" letter-spacing="1.5">SOLUÇÕES CONSTRUTIVAS</text>
-            </svg>
-        </div>
-        <div class="premo-title-container">
-            <h2 style="color:#1E1E1E;margin:0;font-size:20px;font-weight:bold;font-family:sans-serif;">Sistema de Gestão de Descarte</h2>
-            <p style="color:#333333;margin:2px 0 0 0;font-size:13px;font-weight:600;font-family:sans-serif;">Controle Interno e Indicadores de Perdas</p>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
+# Exibição da Logo Oficial no Topo
+if os.path.exists("logo.png"):
+    st.image("logo.png", use_container_width=True)
+else:
+    st.title("🏗️ PREMO - Soluções Construtivas")
 
-# --- ABA DE NAVEGAÇÃO ---
-aba = st.sidebar.radio("Navegação", ["Registrar Descarte", "Visualizar Gráficos e Dados"])
+st.markdown("### **Sistema de Gestão de Descarte**")
+st.caption("Controle Interno e Indicadores de Perdas")
+st.divider()
 
-if aba == "Registrar Descarte":
+# Menu lateral para navegação
+opcao_menu = st.sidebar.radio(
+    "Navegação",
+    ["Registrar Descarte", "Visualizar Gráficos e Dados"]
+)
+
+if opcao_menu == "Registrar Descarte":
     st.subheader("📋 Novo Registro de Descarte")
     
     with st.form("form_descarte", clear_on_submit=True):
-        col1, col2 = st.columns(2)
+        data_ocorrido = st.date_input("Data do Ocorrido", value=date.today())
         
-        with col1:
-            data = st.date_input("Data do Ocorrido", datetime.now())
-            produto = st.selectbox(
-                "Produto Descartado",
-                [
-                    "Bloco de Concreto", 
-                    "Canaleta / Bloco J", 
-                    "Piso Intertravado / Paver", 
-                    "Tubo de Concreto", 
-                    "Laje / Vigota", 
-                    "Elemento Vazado / Cobogó",
-                    "Outro"
-                ]
-            )
-            quantidade = st.number_input("Quantidade (unidades)", min_value=1, step=1)
-            
-        with col2:
-            motivo = st.selectbox(
-                "Motivo do Descarte",
-                [
-                    "Trinca / Quebra no Manuseio", 
-                    "Cura Inadequada / Falha de Resistência", 
-                    "Defeito de Moldagem / Geometria", 
-                    "Dano na Desforma", 
-                    "Avariado no Transporte", 
-                    "Outro"
-                ]
-            )
-            observacao = st.text_area("Observações Adicionais (ex: lote, máquina, etc.)")
-            
-        submitted = st.form_submit_button("Salvar Registro")
+        produto = st.selectbox(
+            "Produto Descartado",
+            [
+                "Bloco de Concreto",
+                "Canaleta / Bloco J",
+                "Piso Intertravado / Paver",
+                "Tubo de Concreto",
+                "Laje / Vigota",
+                "Elemento Vazado / Cobogó",
+                "Outro"
+            ]
+        )
         
-        if submitted:
-            novo_registro = pd.DataFrame([{
-                "Data": data.strftime("%Y-%m-%d"),
-                "Produto": produto,
-                "Quantidade": quantidade,
-                "Motivo": motivo,
-                "Observacao": observacao
-            }])
-            
-            novo_registro.to_csv(ARQUIVO_DADOS, mode='a', header=False, index=False)
+        quantidade = st.number_input("Quantidade (unidades)", min_value=1, step=1, value=1)
+        
+        motivo = st.selectbox(
+            "Motivo do Descarte",
+            [
+                "Trinca / Quebra no Manuseio",
+                "Cura Inadequada / Falha de Resistência",
+                "Defeito de Moldagem / Geometria",
+                "Avariado no Transporte",
+                "Outro"
+            ]
+        )
+        
+        observacoes = st.text_area("Observações Adicionais (ex: lote, máquina, etc.)")
+        
+        btn_salvar = st.form_submit_button("Salvar Registro")
+        
+        if btn_salvar:
+            salvar_registro(data_ocorrido, produto, quantidade, motivo, observacoes)
             st.success("✅ Descarte registrado com sucesso!")
 
-elif aba == "Visualizar Gráficos e Dados":
+elif opcao_menu == "Visualizar Gráficos e Dados":
     st.subheader("📊 Indicadores e Perdas")
     
-    df = pd.read_csv(ARQUIVO_DADOS)
+    df = carregar_dados()
     
     if df.empty:
-        st.info("Nenhum dado registrado até o momento.")
+        st.info("Nenhum registro encontrado até o momento.")
     else:
-        col_m1, col_m2 = st.columns(2)
-        col_m1.metric("Total de Ocorrências", len(df))
-        col_m2.metric("Total de Peças Descartadas", int(df["Quantidade"].sum()))
+        # Métricas resumidas
+        total_ocorrencias = len(df)
+        total_pecas = df["Quantidade"].sum()
+        
+        col1, col2 = st.columns(2)
+        col1.metric("Total de Ocorrências", total_ocorrencias)
+        col2.metric("Total de Peças Descartadas", total_pecas)
         
         st.divider()
         
-        g1, g2 = st.columns(2)
+        # Gráfico 1: Peças descartadas por Produto
+        df_produto = df.groupby("Produto")["Quantidade"].sum().reset_index()
+        fig_produto = px.bar(
+            df_produto,
+            x="Produto",
+            y="Quantidade",
+            title="Total de Peças por Produto",
+            color_discrete_sequence=["#F3B11A"],
+            text_auto=True
+        )
+        fig_produto.update_layout(xaxis_title="Produto", yaxis_title="Quantidade")
+        st.plotly_chart(fig_produto, use_container_width=True)
         
-        with g1:
-            df_prod = df.groupby("Produto")["Quantidade"].sum().reset_index()
-            fig_prod = px.bar(
-                df_prod, 
-                x="Produto", 
-                y="Quantidade", 
-                title="Total de Peças por Produto",
-                text_auto=True,
-                color_discrete_sequence=['#FFC107']
-            )
-            st.plotly_chart(fig_prod, use_container_width=True)
-            
-        with g2:
-            df_motivo = df.groupby("Motivo")["Quantidade"].sum().reset_index()
-            fig_motivo = px.pie(
-                df_motivo, 
-                names="Motivo", 
-                values="Quantidade", 
-                title="Distribuição por Motivo",
-                hole=0.4,
-                color_discrete_sequence=px.colors.sequential.YlOrRd
-            )
-            st.plotly_chart(fig_motivo, use_container_width=True)
-            
+        # Gráfico 2: Distribuição por Motivo
+        df_motivo = df.groupby("Motivo")["Quantidade"].sum().reset_index()
+        fig_motivo = px.pie(
+            df_motivo,
+            names="Motivo",
+            values="Quantidade",
+            title="Distribuição por Motivo",
+            hole=0.4
+        )
+        st.plotly_chart(fig_motivo, use_container_width=True)
+        
         st.divider()
+        
+        # Tabela completa de registros
         st.subheader("📄 Histórico Completo")
         st.dataframe(df, use_container_width=True)
